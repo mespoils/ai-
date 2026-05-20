@@ -1,16 +1,20 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED_PATHS = ["/generate", "/history", "/api/generate", "/api/history"];
+const REDIRECT_PATHS = ["/generate", "/history"];
+const AUTH_PATHS = [
+  "/generate", "/history",
+  "/api/generate", "/api/history", "/api/credits",
+];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isProtected = PROTECTED_PATHS.some(
+  const needsAuth = AUTH_PATHS.some(
     (p) => pathname === p || pathname.startsWith(p + "/")
   );
 
-  if (!isProtected) {
+  if (!needsAuth) {
     return NextResponse.next();
   }
 
@@ -38,7 +42,14 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const needsRedirect = REDIRECT_PATHS.some(
+      (p) => pathname === p || pathname.startsWith(p + "/")
+    );
+    if (needsRedirect) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+    // API 路径不重定向，让 API 自己返回 401
+    return response;
   }
 
   response.headers.set("x-user-id", user.id);
@@ -46,5 +57,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/generate", "/history", "/api/generate", "/api/history"],
+  matcher: [
+    "/generate", "/history",
+    "/api/generate", "/api/history", "/api/credits",
+  ],
 };

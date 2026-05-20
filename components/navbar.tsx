@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button";
 export function Navbar() {
   const [user, setUser] = useState<any>(null);
   const [credits, setCredits] = useState<number | null>(null);
-  const supabase = createClient();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
+    const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user ?? null);
       if (data.user) {
