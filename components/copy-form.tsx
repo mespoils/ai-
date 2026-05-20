@@ -118,7 +118,7 @@ export function CopyForm({ onSubmit, loading }: Props) {
       </div>
 
       <Button type="submit" disabled={!canSubmit} className="w-full">
-        {loading ? "生成中..." : "生成文案（消耗 1 积分）"}
+        {loading ? "生成中..." : "生成文案"}
       </Button>
     </form>
   );

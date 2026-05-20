@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const [user, setUser] = useState<any>(null);
-  const [credits, setCredits] = useState<number | null>(null);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -16,12 +15,6 @@ export function Navbar() {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user ?? null);
-      if (data.user) {
-        fetch("/api/credits")
-          .then((r) => r.json())
-          .then((d) => setCredits(d.credits))
-          .catch(() => {});
-      }
     });
   }, [pathname]);
 
@@ -29,7 +22,6 @@ export function Navbar() {
     const supabase = createClient();
     await supabase.auth.signOut();
     setUser(null);
-    setCredits(null);
     router.push("/");
   }
 
@@ -57,19 +49,9 @@ export function Navbar() {
         </div>
         <div className="flex items-center gap-4">
           {user ? (
-            <>
-              {credits !== null && (
-                <span className="text-sm text-gray-500">
-                  积分:{" "}
-                  <span className="font-semibold text-blue-600">
-                    {credits}
-                  </span>
-                </span>
-              )}
-              <Button variant="outline" size="sm" onClick={handleLogout}>
-                退出
-              </Button>
-            </>
+            <Button variant="outline" size="sm" onClick={handleLogout}>
+              退出
+            </Button>
           ) : (
             <Link href="/login">
               <Button variant="outline" size="sm">

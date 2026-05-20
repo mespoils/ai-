@@ -3,14 +3,11 @@
 import { useState } from "react";
 import { CopyForm } from "@/components/copy-form";
 import { CopyResult } from "@/components/copy-result";
-import { UpgradeModal } from "@/components/upgrade-modal";
 import type { GenerateInput } from "@/lib/types";
 
 export default function GeneratePage() {
   const [result, setResult] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [showUpgrade, setShowUpgrade] = useState(false);
-  const [credits, setCredits] = useState<number | null>(null);
 
   async function handleGenerate(input: GenerateInput) {
     setLoading(true);
@@ -24,12 +21,8 @@ export default function GeneratePage() {
 
     const data = await res.json();
 
-    if (res.status === 402) {
-      setCredits(data.credits ?? 0);
-      setShowUpgrade(true);
-    } else if (data.success) {
+    if (data.success) {
       setResult(data.result);
-      setCredits(data.credits_remaining);
     } else {
       alert(data.error || "生成失败");
     }
@@ -45,11 +38,6 @@ export default function GeneratePage() {
         <p className="text-center text-gray-500 mt-6">AI 正在创作中...</p>
       )}
       <CopyResult result={result} />
-      <UpgradeModal
-        open={showUpgrade}
-        onClose={() => setShowUpgrade(false)}
-        credits={credits}
-      />
     </div>
   );
 }
