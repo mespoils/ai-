@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 import { buildPrompt } from "@/lib/prompt";
 import { generateCopy } from "@/lib/deepseek";
+import { getUserId } from "@/lib/auth";
 
 export async function POST(request: Request) {
-  const userId = request.headers.get("x-user-id");
+  const userId = request.headers.get("x-user-id") || (await getUserId());
   if (!userId) {
     return NextResponse.json({ error: "未登录" }, { status: 401 });
   }
