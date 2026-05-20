@@ -11,11 +11,19 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { copy_type, style, scenario, topic, extra_requirements } = body;
+  const { copy_type, style, scenario, topic, extra_requirements, reference_image } = body;
 
   if (!copy_type || !style || !scenario || !topic) {
     return NextResponse.json(
       { success: false, error: "请填写完整的文案需求" },
+      { status: 400 }
+    );
+  }
+
+  // 限制 base64 图片大小（约 5MB 以内）
+  if (reference_image && reference_image.length > 7_000_000) {
+    return NextResponse.json(
+      { success: false, error: "图片太大，请压缩到 5MB 以内" },
       { status: 400 }
     );
   }
@@ -33,7 +41,7 @@ export async function POST(request: Request) {
 
   let result: string;
   try {
-    result = await generateCopy({ prompt });
+    result = await generateCopy({ prompt, imageBase64: reference_image });
   } catch (err) {
     console.error("DeepSeek API error:", err);
     return NextResponse.json(

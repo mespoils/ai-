@@ -5,6 +5,7 @@ export interface GenerateInput {
   scenario: string;
   topic: string;
   extra_requirements?: string;
+  reference_image?: string; // base64 参考图片，可选
 }
 
 // 生成历史记录
