@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
@@ -25,35 +24,6 @@ export function CopyForm({ onSubmit, loading }: Props) {
   const [scenario, setScenario] = useState("");
   const [topic, setTopic] = useState("");
   const [extra, setExtra] = useState("");
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > 5 * 1024 * 1024) {
-      alert("图片不能超过 5MB");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      setImageBase64(base64);
-      setImagePreview(base64);
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function handleRemoveImage() {
-    setImageBase64(null);
-    setImagePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -63,7 +33,6 @@ export function CopyForm({ onSubmit, loading }: Props) {
       scenario,
       topic,
       extra_requirements: extra,
-      reference_image: imageBase64 ?? undefined,
     });
   }
 
@@ -136,43 +105,9 @@ export function CopyForm({ onSubmit, loading }: Props) {
         />
       </div>
 
-      {/* 参考图片（选填） */}
-      <div className="space-y-2">
-        <Label>5 参考图片（选填）</Label>
-        <p className="text-xs text-gray-400">
-          上传参考图，AI 会分析图片风格并融入文案
-        </p>
-        {imagePreview ? (
-          <div className="relative inline-block">
-            <img
-              src={imagePreview}
-              alt="预览"
-              className="h-24 rounded-md border object-cover"
-            />
-            <button
-              type="button"
-              onClick={handleRemoveImage}
-              className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center"
-            >
-              x
-            </button>
-          </div>
-        ) : (
-          <div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              onChange={handleFileChange}
-              className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-            />
-          </div>
-        )}
-      </div>
-
       {/* 补充要求 */}
       <div className="space-y-2">
-        <Label htmlFor="extra">6 补充要求（选填）</Label>
+        <Label htmlFor="extra">5 补充要求（选填）</Label>
         <Textarea
           id="extra"
           placeholder="如：字数限制、关键词、特殊要求..."

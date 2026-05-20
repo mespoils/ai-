@@ -88,10 +88,6 @@ export function buildPrompt(input: GenerateInput): string {
 【使用场景】${input.scenario}
 【用户需求】${input.topic}`;
 
-  if (input.reference_image) {
-    prompt += `\n【参考图片】用户已上传一张参考图片，请分析图片中的视觉风格、排版、色调、元素等内容，将其作为文案风格和视觉调性的参考。`;
-  }
-
   if (input.extra_requirements) {
     prompt += `\n【补充要求】${input.extra_requirements}`;
   }
