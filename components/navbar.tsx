@@ -49,9 +49,14 @@ export function Navbar() {
         </div>
         <div className="flex items-center gap-4">
           {user ? (
-            <Button variant="outline" size="sm" onClick={handleLogout}>
-              退出
-            </Button>
+            <>
+              <span className="text-sm text-gray-400 truncate max-w-[200px]">
+                {user.email}
+              </span>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                退出
+              </Button>
+            </>
           ) : (
             <Link href="/login">
               <Button variant="outline" size="sm">

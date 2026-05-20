@@ -94,12 +94,13 @@ export function CopyForm({ onSubmit, loading }: Props) {
         </div>
       </div>
 
-      {/* 主体 */}
+      {/* 用户需求 */}
       <div className="space-y-2">
-        <Label htmlFor="topic">4 推广主体</Label>
-        <Input
+        <Label htmlFor="topic">4 你的需求</Label>
+        <Textarea
           id="topic"
-          placeholder="请输入你要推广的产品/服务/主题"
+          placeholder={'描述你想发什么内容，表达什么。例如：\n"我们奶茶店新出了杨枝甘露，想在小红书发一篇笔记吸引年轻人来打卡"\n"公司团建去了大理，想发个朋友圈记录一下"'}
+          rows={3}
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
         />

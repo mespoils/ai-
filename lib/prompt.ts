@@ -82,7 +82,7 @@ export function buildPrompt(input: GenerateInput): string {
 【文案类型】${input.copy_type}
 【风格要求】${input.style}
 【使用场景】${input.scenario}
-【推广主体】${input.topic}`;
+【用户需求】${input.topic}`;
 
   if (input.extra_requirements) {
     prompt += `\n【补充要求】${input.extra_requirements}`;
