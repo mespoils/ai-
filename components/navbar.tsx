@@ -26,6 +26,7 @@ export function Navbar() {
   }, [pathname]);
 
   async function handleLogout() {
+    const supabase = createClient();
     await supabase.auth.signOut();
     setUser(null);
     setCredits(null);
